@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +47,15 @@ fun MilkshakeScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(animatedColor)
+            .background(
+                brush = Brush.verticalGradient(
+                    colorStops = arrayOf(
+                        0.0f to Color.White,
+                        0.5f to animatedColor.copy(alpha = 0.5f),
+                        1.0f to Color.White
+                    )
+                )
+            )
     ) {
         // Create a custom fling behavior with a slower animation
         val flingBehavior = PagerDefaults.flingBehavior(
