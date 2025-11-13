@@ -92,11 +92,20 @@ fun MilkshakeScreen() {
                     .fillMaxSize(),
                 contentAlignment = Alignment.CenterStart // Align main item to the start
             ) {
-                Image(
-                    painter = painterResource(milkshakes[realPage].image),
-                    contentDescription = null,
-                    modifier = Modifier.size(350.dp) // Adjusted image size
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(milkshakes[realPage].image),
+                        contentDescription = null,
+                        modifier = Modifier.size(350.dp) // Adjusted image size
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = milkshakes[realPage].name,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = milkshakes[realPage].color
+                    )
+                }
             }
         }
 
@@ -106,12 +115,6 @@ fun MilkshakeScreen() {
                 .padding(bottom = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = currentMilkshake.name,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
@@ -130,7 +133,7 @@ fun MilkshakeScreen() {
             Text(
                 text = "BUY 1 GET 1 FREE",
                 fontSize = 14.sp,
-                color = Color.White
+                color = currentMilkshake.color
             )
         }
     }
