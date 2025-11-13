@@ -65,7 +65,7 @@ fun MilkshakeScreen() {
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(top = 80.dp), // Pushed the pager down
             contentPadding = PaddingValues(start = 20.dp, end = 180.dp), // Asymmetric padding
             flingBehavior = flingBehavior // Apply the custom fling behavior
         ) { page ->
@@ -87,6 +87,9 @@ fun MilkshakeScreen() {
                         scaleX = scale
                         scaleY = scale
                         alpha = lerp(1f, 0.4f, easedOffset)
+
+                        // Move the background item up
+                        translationY = lerp(0f, -150f, easedOffset)
                     }
                     .blur(radius = blurRadius) // Apply the blur effect
                     .fillMaxSize(),
