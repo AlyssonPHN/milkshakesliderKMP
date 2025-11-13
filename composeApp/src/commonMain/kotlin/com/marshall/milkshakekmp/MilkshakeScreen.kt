@@ -1,10 +1,13 @@
 package com.marshall.milkshakekmp
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -12,11 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import org.jetbrains.compose.resources.painterResource
@@ -32,40 +37,56 @@ fun MilkshakeScreen() {
     )
     val currentMilkshake = milkshakes[pagerState.currentPage % milkshakes.size]
 
-    val animatedColor by animateColorAsState(targetValue = currentMilkshake.color)
+    // Slow down the color transition
+    val animatedColor by animateColorAsState(
+        targetValue = currentMilkshake.color,
+        animationSpec = tween(durationMillis = 600, easing = EaseInOut)
+    )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(animatedColor)
     ) {
+        // Create a custom fling behavior with a slower animation
+        val flingBehavior = PagerDefaults.flingBehavior(
+            state = pagerState,
+            snapAnimationSpec = tween(durationMillis = 600, easing = EaseInOut)
+        )
+
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(start = 20.dp, end = 180.dp) // Asymmetric padding
+            contentPadding = PaddingValues(start = 20.dp, end = 180.dp), // Asymmetric padding
+            flingBehavior = flingBehavior // Apply the custom fling behavior
         ) { page ->
             val pageOffset = (
                 (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
             ).absoluteValue
 
             val realPage = page % milkshakes.size
+            val easedOffset = EaseInOut.transform(pageOffset.coerceIn(0f, 1f))
+
+            // Calculate blur based on the offset
+            val blurRadius = lerp(0.dp, 4.dp, easedOffset)
 
             Box(
                 modifier = Modifier
                     .graphicsLayer {
                         // Make items further away smaller and more transparent
-                        val scale = lerp(1f, 0.5f, pageOffset.coerceIn(0f, 1f))
+                        val scale = lerp(1f, 0.6f, easedOffset)
                         scaleX = scale
                         scaleY = scale
-                        alpha = lerp(1f, 0.4f, pageOffset.coerceIn(0f, 1f))
+                        alpha = lerp(1f, 0.4f, easedOffset)
                     }
+                    .blur(radius = blurRadius) // Apply the blur effect
                     .fillMaxSize(),
                 contentAlignment = Alignment.CenterStart // Align main item to the start
             ) {
                 Image(
                     painter = painterResource(milkshakes[realPage].image),
                     contentDescription = null,
-                    modifier = Modifier.size(400.dp)
+                    modifier = Modifier.size(350.dp) // Adjusted image size
                 )
             }
         }
