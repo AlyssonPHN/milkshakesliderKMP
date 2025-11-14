@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.zIndex
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.absoluteValue
@@ -82,13 +83,13 @@ fun MilkshakeScreen() {
                 brush = Brush.verticalGradient(
                     colorStops = arrayOf(
                         0.0f to Color.White,
-                        0.5f to animatedColor.copy(alpha = 0.5f),
+                        0.5f to animatedColor, // Transparency removed as requested
                         1.0f to Color.White
                     )
                 )
             )
     ) {
-        // By placing the banner Box first, it is drawn at the back.
+        // 1. The banner is drawn first, so it's at the back.
         BoxWithConstraints(modifier = Modifier.align(Alignment.TopCenter)) {
             Box(
                 modifier = Modifier
@@ -113,22 +114,25 @@ fun MilkshakeScreen() {
                     Text(
                         text = "✨",
                         color = Color.White,
-                        fontSize = 20.sp
+                        fontSize = 20.sp,
+                        fontFamily = montserratFontFamily
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Only This",
                         color = Color.White,
                         fontSize = 18.sp,
+                        fontFamily = montserratFontFamily,
                         fontWeight = FontWeight.W600,
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
-                        "Weekend",
+                        text = "Weekend",
                         color = Color.White,
                         fontSize = 60.sp,
+                        fontFamily = greatVibesFontFamily,
                         fontWeight = FontWeight.Bold,
-                        fontStyle = FontStyle.Italic,
+                        letterSpacing = 2.sp,
                     )
                 }
             }
@@ -139,7 +143,7 @@ fun MilkshakeScreen() {
             snapAnimationSpec = tween(durationMillis = 600, easing = EaseInOut)
         )
 
-        // The Pager is drawn second, so it appears on top of the banner.
+        // 2. The Pager is drawn second, so it appears on top of the banner.
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -159,12 +163,12 @@ fun MilkshakeScreen() {
 
             Box(
                 modifier = Modifier
+                    .zIndex(1f - easedOffset) // zIndex inside pager for item stacking
                     .graphicsLayer {
                         val scale = lerp(1f, 0.6f, easedOffset)
                         scaleX = scale
                         scaleY = scale
-                        alpha = lerp(1f, 0.4f, easedOffset)
-
+                        alpha = lerp(1f, 0.85f, easedOffset)
                         translationY = lerp(0f, -150f, easedOffset)
                     }
                     .blur(radius = blurRadius)
@@ -182,13 +186,14 @@ fun MilkshakeScreen() {
                         text = milkshakes[realPage].name,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = milkshakes[realPage].color
+                        color = milkshakes[realPage].color,
+                        fontFamily = montserratFontFamily
                     )
                 }
             }
         }
 
-        // The footer is drawn last, so it appears on top of everything.
+        // 3. The footer is drawn last, so it appears on top of everything.
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -206,14 +211,16 @@ fun MilkshakeScreen() {
                     text = "$${currentMilkshake.price} EACH",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = currentMilkshake.color
+                    color = currentMilkshake.color,
+                    fontFamily = montserratFontFamily
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "BUY 1 GET 1 FREE",
                 fontSize = 14.sp,
-                color = currentMilkshake.color
+                color = currentMilkshake.color,
+                fontFamily = montserratFontFamily
             )
         }
     }
