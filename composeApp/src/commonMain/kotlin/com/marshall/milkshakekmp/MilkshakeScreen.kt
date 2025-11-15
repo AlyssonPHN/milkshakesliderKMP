@@ -3,15 +3,20 @@ package com.marshall.milkshakekmp
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
@@ -29,12 +33,10 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
-import coil3.compose.AsyncImage
 import milkshakekmp.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.absoluteValue
-import milkshakekmp.composeapp.generated.resources.magic
 import milkshakekmp.composeapp.generated.resources.star
 
 class TopSemicircleShape : Shape {
@@ -73,6 +75,14 @@ fun MilkshakeScreen() {
         initialPage = Int.MAX_VALUE / 2,
         pageCount = { Int.MAX_VALUE }
     )
+    val pricePagerState = rememberPagerState(
+        initialPage = pagerState.currentPage,
+        pageCount = { Int.MAX_VALUE }
+    )
+    LaunchedEffect(pagerState.currentPage) {
+        pricePagerState.animateScrollToPage(pagerState.currentPage)
+    }
+
     val currentMilkshake = milkshakes[pagerState.currentPage % milkshakes.size]
 
     val animatedColor by animateColorAsState(
@@ -157,8 +167,8 @@ fun MilkshakeScreen() {
             flingBehavior = flingBehavior
         ) { page ->
             val pageOffset = (
-                (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-            ).absoluteValue
+                    (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                    ).absoluteValue
 
             val realPage = page % milkshakes.size
             val easedOffset = EaseInOut.transform(pageOffset.coerceIn(0f, 1f))
@@ -204,26 +214,82 @@ fun MilkshakeScreen() {
                 .padding(bottom = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White)
-                    .padding(horizontal = 24.dp, vertical = 12.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "$${currentMilkshake.price} EACH",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = currentMilkshake.color,
-                    fontFamily = montserratFontFamily
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    color = animatedColor,
+                    thickness = 1.dp
+                )
+                Image(
+                    painter = painterResource(Res.drawable.star),
+                    contentDescription = "Star",
+                    modifier = Modifier.size(18.dp),
+                    colorFilter = ColorFilter.tint(animatedColor)
+                )
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    color = animatedColor,
+                    thickness = 1.dp
+                )
+                Box(
+                    modifier = Modifier
+                        .width(170.dp)
+                        .height(40.dp)
+                        .border(
+                            BorderStroke(1.dp, animatedColor),
+                            RoundedCornerShape(50.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    VerticalPager(
+                        state = pricePagerState,
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        userScrollEnabled = false,
+                    ) { page ->
+                        val realPage = page % milkshakes.size
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "$${milkshakes[realPage].price} EACH",
+                                fontSize = 21.sp,
+                                color = animatedColor,
+                                fontWeight = FontWeight.W800,
+                                fontFamily = montserratFontFamily
+                            )
+                        }
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    color = animatedColor,
+                    thickness = 1.dp
+                )
+                Image(
+                    painter = painterResource(Res.drawable.star),
+                    contentDescription = "Star",
+                    modifier = Modifier.size(18.dp),
+                    colorFilter = ColorFilter.tint(animatedColor)
+                )
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    color = animatedColor,
+                    thickness = 1.dp
                 )
             }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = "BUY 1 GET 1 FREE",
-                fontSize = 14.sp,
-                color = currentMilkshake.color,
+                fontSize = 12.sp,
+                color = animatedColor,
+                fontWeight = FontWeight.W600,
                 fontFamily = montserratFontFamily
             )
         }
