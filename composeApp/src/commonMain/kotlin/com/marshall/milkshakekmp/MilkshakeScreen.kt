@@ -117,7 +117,7 @@ fun MilkshakeScreen() {
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                animatedColor.copy(alpha = 0.7f),
+                                animatedColor.copy(alpha = 0.25f),
                                 animatedColor
                             )
                         )
