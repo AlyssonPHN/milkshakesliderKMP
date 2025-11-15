@@ -29,9 +29,13 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
+import coil3.compose.AsyncImage
+import milkshakekmp.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.absoluteValue
+import milkshakekmp.composeapp.generated.resources.magic
+import milkshakekmp.composeapp.generated.resources.star
 
 class TopSemicircleShape : Shape {
     override fun createOutline(
@@ -111,11 +115,11 @@ fun MilkshakeScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(top = 40.dp)
                 ) {
-                    Text(
-                        text = "✨",
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontFamily = montserratFontFamily
+                    Image(
+                        painter = painterResource(Res.drawable.star),
+                        contentDescription = "Magic",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(Color.White)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -184,7 +188,7 @@ fun MilkshakeScreen() {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = milkshakes[realPage].name,
-                        fontSize = 32.sp,
+                        fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = milkshakes[realPage].color,
                         fontFamily = montserratFontFamily
