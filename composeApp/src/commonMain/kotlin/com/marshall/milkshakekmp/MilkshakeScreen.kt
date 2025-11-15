@@ -80,7 +80,10 @@ fun MilkshakeScreen() {
         pageCount = { Int.MAX_VALUE }
     )
     LaunchedEffect(pagerState.currentPage) {
-        pricePagerState.animateScrollToPage(pagerState.currentPage)
+        pricePagerState.animateScrollToPage(
+            page = pagerState.currentPage,
+            animationSpec = tween(durationMillis = 600, easing = EaseInOut)
+        )
     }
 
     val currentMilkshake = milkshakes[pagerState.currentPage % milkshakes.size]
@@ -193,13 +196,13 @@ fun MilkshakeScreen() {
                     Image(
                         painter = painterResource(milkshakes[realPage].image),
                         contentDescription = null,
-                        modifier = Modifier.size(350.dp)
+                        modifier = Modifier.size(400.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = milkshakes[realPage].name,
                         fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.W600,
                         color = milkshakes[realPage].color,
                         fontFamily = montserratFontFamily
                     )
@@ -221,7 +224,7 @@ fun MilkshakeScreen() {
                 HorizontalDivider(
                     modifier = Modifier.weight(1f),
                     color = animatedColor,
-                    thickness = 1.dp
+                    thickness = 0.6.dp
                 )
                 Image(
                     painter = painterResource(Res.drawable.star),
@@ -232,7 +235,7 @@ fun MilkshakeScreen() {
                 HorizontalDivider(
                     modifier = Modifier.weight(1f),
                     color = animatedColor,
-                    thickness = 1.dp
+                    thickness = 0.6.dp
                 )
                 Box(
                     modifier = Modifier
@@ -268,7 +271,7 @@ fun MilkshakeScreen() {
                 HorizontalDivider(
                     modifier = Modifier.weight(1f),
                     color = animatedColor,
-                    thickness = 1.dp
+                    thickness = 0.6.dp
                 )
                 Image(
                     painter = painterResource(Res.drawable.star),
@@ -279,7 +282,7 @@ fun MilkshakeScreen() {
                 HorizontalDivider(
                     modifier = Modifier.weight(1f),
                     color = animatedColor,
-                    thickness = 1.dp
+                    thickness = 0.6.dp
                 )
             }
 

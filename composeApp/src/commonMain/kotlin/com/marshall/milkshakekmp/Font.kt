@@ -20,5 +20,9 @@ val greatVibesFontFamily: FontFamily
 val montserratFontFamily: FontFamily
     @Composable
     get() = FontFamily(
-        Font(Res.font.montserrat_semibold, FontWeight.W600)
+        // Para ter pesos de fonte diferentes, adicione os arquivos .ttf correspondentes
+        // aos seus recursos e aponte para eles aqui.
+        Font(Res.font.montserrat_semibold, FontWeight.W600),
+        Font(Res.font.montserrat_semibold, FontWeight.W800),
+        Font(Res.font.montserrat_semibold, FontWeight.W900)
     )
