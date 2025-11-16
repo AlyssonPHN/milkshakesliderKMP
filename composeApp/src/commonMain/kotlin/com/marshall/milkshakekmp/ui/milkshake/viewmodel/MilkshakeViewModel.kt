@@ -1,6 +1,5 @@
 package com.marshall.milkshakekmp.ui.milkshake.viewmodel
 
-import com.marshall.milkshakekmp.data.repository.MilkshakeRepositoryImpl
 import com.marshall.milkshakekmp.domain.use_case.GetMilkshakesUseCase
 import com.marshall.milkshakekmp.ui.milkshake.state.MilkshakeState
 import com.marshall.milkshakekmp.ui.milkshake.state.toUiModel
@@ -9,9 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class MilkshakeViewModel {
-
-    private val getMilkshakesUseCase = GetMilkshakesUseCase(MilkshakeRepositoryImpl())
+class MilkshakeViewModel(private val getMilkshakesUseCase: GetMilkshakesUseCase) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(MilkshakeState())
     val uiState: StateFlow<MilkshakeState> = _uiState.asStateFlow()

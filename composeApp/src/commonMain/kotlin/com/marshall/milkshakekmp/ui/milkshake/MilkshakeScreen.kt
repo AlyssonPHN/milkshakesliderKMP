@@ -11,11 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.marshall.milkshakekmp.data.repository.MilkshakeRepositoryImpl
+import com.marshall.milkshakekmp.domain.use_case.GetMilkshakesUseCase
 import com.marshall.milkshakekmp.ui.milkshake.components.MilkshakeBanner
 import com.marshall.milkshakekmp.ui.milkshake.components.MilkshakeFooter
 import com.marshall.milkshakekmp.ui.milkshake.components.MilkshakePager
@@ -23,10 +24,8 @@ import com.marshall.milkshakekmp.ui.milkshake.viewmodel.MilkshakeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
-@Preview
 @Composable
-fun MilkshakeScreen() {
-    val viewModel = remember { MilkshakeViewModel() }
+fun MilkshakeScreen(viewModel: MilkshakeViewModel) {
     val uiState by viewModel.uiState.collectAsState()
 
     val pagerState = rememberPagerState(
@@ -82,4 +81,12 @@ fun MilkshakeScreen() {
             modifier = Modifier.align(Alignment.BottomCenter)
         )
     }
+}
+
+@Preview
+@Composable
+private fun MilkshakeScreenPreview() {
+    val useCase = GetMilkshakesUseCase(MilkshakeRepositoryImpl())
+    val viewModel = MilkshakeViewModel(useCase)
+    MilkshakeScreen(viewModel = viewModel)
 }
